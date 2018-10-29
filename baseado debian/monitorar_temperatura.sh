@@ -2,14 +2,15 @@
 
 #variaveis de caminho
 pasta_log=/monitoramento
-arquivo_log=$pasta_log/temperatura
+arquivo_log=$pasta_log/temperatura-$(date +%d-%m-%Y)
 arquivo_temporario=/tmp/temporario
 
-#verificar se pasta monitoramento existe
+#verificar se pasta monitoramento existe e limpando arquivos antigos
 if [ ! -d $pasta_log ];then
 	mkdir $pasta_log
+else
+	$(find $pasta_log/* -mtime +1 -exec rm{} \;) 
 fi
-
 #verificar se arquivo_log existe
 if [ ! -e $arquivo_log ];then
 	echo > $arquivo_log
