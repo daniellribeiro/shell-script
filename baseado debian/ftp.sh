@@ -10,11 +10,27 @@ ARQ_CONF=/etc/vsftpd.conf
 ARQ_PASSWD=/etc/passwd
 OK=$(echo -e [$verde OK $padrao]);
 
+#usuario root
+echo "Para rodar este script precisa estar logado como root"
+echo "Voce esta logado como root ? 1-Sim 2-Nao"
+read resposta
+
+if [ $resposta -ne 1 ];then
+	exit
+fi
+
 #removendo vsftpd antigo 
-echo Removendo vsftpd
+echo "Removendo vsftpd"
 apt-get remove vsftpd -y > /dev/null
 #valida($?);
 echo "Vsftpd removido $OK"
+
+#removendo arquivo configuracao vsftpd
+echo "Removendo arquivo configuracao vsftpd antigo"
+#rm $ARQ_CONF
+#rm $ARQ_CONF.bkp
+#valida($?);
+echo "Arquivo de configuracao removido $OK"
 
 #instalando vsftpd
 echo Instalando vsftpd
@@ -62,6 +78,17 @@ echo "pasta FTP criada com sucesso $OK"
 echo "Habilitando permissão na pasta FTP"
 chmod 777 /FTP -R
 echo "Permissão habilitada $OK"
+
+#Desabilitando firewall
+ufw disable
+echo "Firewall Desabilitado Temporariamente $OK"
+
+#Lembrete
+echo
+echo "Lembrando:"
+echo "Falta inserir a senha do tools"
+echo "E configurar o arquivo /etc/passwd"
+echo "para tools:x:(numero):(numero)::/FTP:/sbin/nologin"
 
 #apt install policycoreutils
 
