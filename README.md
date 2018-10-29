@@ -9,6 +9,6 @@ Na pasta baseado no red ret contem:
 
 Na pasta baseado no debian contem:
 - instalando_postgres.sh = instalar postgres
-- monitorando_temperatura.sh = monitorar temperatura
+- monitorar_temperatura.sh = monitorar temperatura
 
 OBS: Todos estes scripts ainda estão em fase de desenvolvimento
