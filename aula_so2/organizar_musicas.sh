@@ -23,9 +23,9 @@ for i in $(seq $(ls $PASTA | wc -l));do
 	artista=$(echo $(cut -d' ' -f $i $ARQUIVO));
 	if [ ! -d  $PASTA_TEMP/$artista ];then
 		mkdir $PASTA_TEMP/$artista
+		 #Movendo musicas para pasta do respectivo artista
 		 mv $PASTA/*$artista* $PASTA_TEMP/$artista
 	fi
-	#Movendo musicas para pasta do respectivo artista
 done
 
 #Criando pasta dos albuns
@@ -41,7 +41,7 @@ for i in $(seq $(ls $PASTA_TEMP | wc -l));do
 			mkdir $PASTA_TEMP/$PASTA_ARTISTA/$album
 		fi
 		#movendo musicas para pasta do respectivo album
-		mv $PASTA_TEMP/$PASTA_ARTISTA/*$album* $PASTA_TEMP/$PASTA_ARTISTA/$album 2>/dev/null
+		mv $PASTA_TEMP/$PASTA_ARTISTA/*$album* $PASTA_TEMP/$PASTA_ARTISTA/$album/ 2>/dev/null
 	done
 done
 
