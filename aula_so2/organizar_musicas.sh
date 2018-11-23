@@ -24,7 +24,7 @@ for i in $(seq $(ls $PASTA | wc -l));do
 	if [ ! -d  $PASTA_TEMP/$artista ];then
 		mkdir $PASTA_TEMP/$artista
 		 #Movendo musicas para pasta do respectivo artista
-		 mv $PASTA/*$artista* $PASTA_TEMP/$artista
+		 mv $PASTA/*$artista* $PASTA_TEMP/$artista 2>/dev/null
 	fi
 done
 
