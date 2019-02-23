@@ -29,7 +29,4 @@ cat /root/.ssh/id_rsa.pub
 echo "depois de copiado tecle ENTER"
 read
 
-echo "adicionando chave privada para verificar automaticamente"
-ssh-add ~/.ssh/id_rsa
-
 echo "Pronto, o seu git esta integrado ao seu repositorio do github"
