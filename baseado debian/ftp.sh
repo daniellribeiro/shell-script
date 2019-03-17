@@ -3,11 +3,11 @@
 #cores
 padrao="\033[0m"
 verde="\033[0;32m"
+vermelho="\033[0;31m"
 
 #variaveis
 FTP=/FTP
-ARQ_CONF=/etc/vsftpd.conf
-ARQ_PASSWD=/etc/passwd
+ARQ_CONF=/etc/proftpd/proftpd.conf
 OK=$(echo -e [$verde OK $padrao]);
 
 #usuario root
@@ -19,76 +19,54 @@ if [ $resposta -ne 1 ];then
 	exit
 fi
 
-#removendo vsftpd antigo 
-echo "Removendo vsftpd"
-apt-get remove vsftpd -y > /dev/null
-#valida($?);
-echo "Vsftpd removido $OK"
-
-#removendo arquivo configuracao vsftpd
-echo "Removendo arquivo configuracao vsftpd antigo"
-#rm $ARQ_CONF
-#rm $ARQ_CONF.bkp
-#valida($?);
-echo "Arquivo de configuracao removido $OK"
-
-#instalando vsftpd
-echo Instalando vsftpd
-apt-get install vsftpd -y > /dev/null
-#valida($?);
-echo "Vsftpd instalado $OK"
+#instalando proftpd
+echo "Aguarde"
+apt-get install proftpd -y > /dev/null 2>/dev/null
+echo "Proftpd instalado $OK"
 
 #copiando arquivo original
-echo Salvando Arquivo de Configuracao Original
 cp $ARQ_CONF $ARQ_CONF.bkp
-#valida($?);
 echo "Arquivo Original Salvo $OK"
 
-#configurando arquivo vsftpd
-echo "Configurando Arquivo vsftpd"
-sed -i 's/anonymous_enable=YES/anonymous_enable=NO/g' vsftpd.conf
-sed -i 's/#chroot_local_user=YES/chroot_local_user=YES/g' vsftpd.conf
+#configurando arquivo proftpd
+sed -i 's/# DefaultRoot/DefaultRoot/g' $ARQ_CONF
+echo "Copie e cole no terminal o seguinte comando"
+echo -e "$vermelho sudo vim $ARQ_CONF $padrao"
+echo -e "Mude a linha DefaultRoot ~ para $vermelho DefaultRoot $FTP $padrao"
+echo "Depois disso venha no script e aperte ENTER"
+read
 echo "Arquivo vsftpd configurado $OK"
 
 #iniciando serviço vsftpd
-echo "Iniciando Serviço vsftpd"
-service vsftpd start
-#valida($?);
-echo "Serviço vsftpd Iniciado $OK"
+service proftpd restart
+echo "Reiniciado com sucesso $OK"
 
-#Criando usuario tools
-echo "Criando usuario tools"
-useradd tools
-#valida($?);
-echo "Usuario tools criado com sucesso $OK"
+#Editando arquivo /etc/shells
+echo >> /etc/shells
+echo  "/bin/false" >> /etc/shells
+echo "Arquivo /etc/shells editado $OK"
 
-#Copiando arquivo passwd original
-echo "Salvando arquivo passwd original"
-cp $ARQ_PASSWD $ARQ_PASSWD.bkp
-echo "Arquivo original salvo com sucesso $OK"
+#Criando ftpgroup
+groupadd ftpgroup
+echo "Grupo ftpgroup criado $OK"
+
+#Criando USUARIOFTP
+echo "Criando usuario que acessara ftp"
+echo -e "$vermelho Qual o nome do usuario ? $padrao"
+read usuario
+useradd $usuario -s /bin/false -d $FTP -G ftpgroup
+echo "Usuario $usuario criado com sucesso $OK"
 
 #Criando pasta FTP
-echo "Criando pasta FTP"
-rm -rf $FTP
 mkdir $FTP
 mkdir $FTP/parabens_entrou_na_ftp
 echo "pasta FTP criada com sucesso $OK"
 
-#Habilitando permissões na pasta FTP
-echo "Habilitando permissão na pasta FTP"
-chmod 777 /FTP -R
-echo "Permissão habilitada $OK"
-
-#Desabilitando firewall
-ufw disable
-echo "Firewall Desabilitado Temporariamente $OK"
-
-#Lembrete
+#Senha no USUARIOFTP
 echo
-echo "Lembrando:"
-echo "Falta inserir a senha do tools"
-echo "E configurar o arquivo /etc/passwd"
-echo "para tools:x:(numero):(numero)::/FTP:/sbin/nologin"
+echo
+echo "$vermelho Digite a senha do usuario $usuario $padrao"
+passwd $usuario
 
-#apt install policycoreutils
-
+#site que me ajudou a criar script
+#https://sempreupdate.com.br/como-criar-um-servidor-ftp-no-linux/
