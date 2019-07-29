@@ -10,9 +10,9 @@ vermelho="\033[0;41m"
 
 ok=$(echo -e "$verde [OK] $padrao")
 workspace="/home/$USER"
-arq_nome_email="/tmp/nome_email"
-arq_repositorios="/tmp/repositorios"
-arq_nome_link="/tmp/nome_link"
+arq_nome_email="/tmp/configuracao/nome_email"
+arq_repositorios="/tmp/configuracao/repositorios"
+arq_nome_link="/tmp/configuracao/nome_link"
 arq_configuracao="configuracao.tar.xz"
 #funções
 
@@ -30,7 +30,7 @@ adicionar_repositorio() {
 		git init
 		
 		#adicionando repositorio
-		repositorio="git@github.com:$nome_link/$repositorio.git";
+		repositorio="git@github.com:$(cat $nome_link)/$repositorio.git";
 		echo "adicionando repositorio $repositorio $ok"
 		$(git remote add origin $repositorio);
 
@@ -101,15 +101,14 @@ if [ -e "github" ];then
         echo "PASTA GITHUB JÁ EXISTE!!!";
 else
         $(mkdir github);
-        echo "criou pasta";
+        echo "criou pasta github $ok";
 fi
-mv $configuracao github
+$(mv $arq_configuracao github/$configuracao)
 cd github
 
 #descompactando arquivo configuracao
 echo "descompactando arquivo de configuracao $ok"
-tar -xf $configuracao -C /tmp
-
+tar -xf $arq_configuracao -C /tmp
 #adicionando repositorios
 echo "adicionando repositorios $ok"
 for repositorio in $(cat $arq_repositorios);do
