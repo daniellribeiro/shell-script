@@ -1,14 +1,9 @@
 #!/bin/bash
 
-#cores
-padrao="\033[0m"
-verde="\033[0;32m"
-vermelho="\033[0;31m"
-
 #variaveis
 FTP=/FTP
 ARQ_CONF=/etc/proftpd/proftpd.conf
-OK=$(echo -e [$verde OK $padrao]);
+OK=$(echo -e OK);
 
 #usuario root
 echo "Para rodar este script precisa estar logado como root"
@@ -21,6 +16,9 @@ fi
 
 #instalando proftpd
 echo "Aguarde"
+apt-get install vim -y > /dev/null 2>/dev/null
+echo "vim instalado $OK"
+
 apt-get install proftpd -y > /dev/null 2>/dev/null
 echo "Proftpd instalado $OK"
 
@@ -31,7 +29,7 @@ echo "Arquivo Original Salvo $OK"
 #configurando arquivo proftpd
 sed -i 's/# DefaultRoot/DefaultRoot/g' $ARQ_CONF
 echo "Copie e cole no terminal o seguinte comando"
-echo -e "$vermelho sudo vim $ARQ_CONF $padrao"
+echo -e "sudo vim $ARQ_CONF"
 echo -e "Mude a linha DefaultRoot ~ para $vermelho DefaultRoot $FTP $padrao"
 echo "Depois disso venha no script e aperte ENTER"
 read
@@ -52,7 +50,7 @@ echo "Grupo ftpgroup criado $OK"
 
 #Criando USUARIOFTP
 echo "Criando usuario que acessara ftp"
-echo -e "$vermelho Qual o nome do usuario ? $padrao"
+echo -e "Qual o nome do usuario ?"
 read usuario
 useradd $usuario -s /bin/false -d $FTP -G ftpgroup
 echo "Usuario $usuario criado com sucesso $OK"
@@ -65,7 +63,7 @@ echo "pasta FTP criada com sucesso $OK"
 #Senha no USUARIOFTP
 echo
 echo
-echo "$vermelho Digite a senha do usuario $usuario $padrao"
+echo "Digite a senha do usuario $usuario"
 passwd $usuario
 
 #site que me ajudou a criar script
