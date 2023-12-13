@@ -66,5 +66,9 @@ echo
 echo "Digite a senha do usuario $usuario"
 passwd $usuario
 
+#Liberando permissao FTP
+chmod 777 /FTP/*
+chmod 777 /FTP
+
 #site que me ajudou a criar script
 #https://sempreupdate.com.br/como-criar-um-servidor-ftp-no-linux/
